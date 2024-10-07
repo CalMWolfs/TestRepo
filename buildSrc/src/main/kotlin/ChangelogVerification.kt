@@ -1,5 +1,6 @@
 import at.hannibal2.changelog.SkyHanniChangelogBuilder
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
@@ -29,6 +30,7 @@ abstract class ChangelogVerification : DefaultTask() {
             println("Changelog verification failed")
             bodyErrors.forEach { println(it.message) }
             titleErrors.forEach { println(it.message) }
+            throw GradleException("Changelog verification failed")
         }
         println("prTitle: $prTitle")
         println("prBody: $prBody")
