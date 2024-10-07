@@ -4,10 +4,14 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
+    maven("https://jitpack.io") {
+        content {
+            includeGroupByRegex("com\\.github\\..*")
+        }
+    }
 }
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("com.github.CalMWolfs:SkyHanniChangelogBuilder:1.0.0-test2") // Add your library here too
+    implementation("com.github.SkyHanniStudios:SkyHanniChangelogBuilder:1.0.0")
 }

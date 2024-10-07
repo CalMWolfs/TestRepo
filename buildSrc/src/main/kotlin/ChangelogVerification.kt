@@ -47,8 +47,7 @@ abstract class ChangelogVerification : DefaultTask() {
             errorFile.appendText("I have detected some issues with your pull request:\n\n")
 
             if (bodyErrors.isNotEmpty()) {
-                val errorsMapped = bodyErrors.map { "${it.message} in text: `${it.relevantLine}`" }
-                errorFile.appendText("Changelog issues:\n${errorsMapped.joinToString("\n")}\n\n")
+                errorFile.appendText("Body issues:\n${bodyErrors.joinToString("\n") { it.formatLine() }}\n\n")
             }
             if (titleErrors.isNotEmpty()) {
                 errorFile.appendText("Title issues:\n${titleErrors.joinToString("\n") { it.message }}\n\n")
