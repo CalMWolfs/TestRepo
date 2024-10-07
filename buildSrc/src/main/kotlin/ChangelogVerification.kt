@@ -37,12 +37,17 @@ abstract class ChangelogVerification : DefaultTask() {
 
             // Export errors so that they can be listed in the PR comment
             val errorFile = File(outputDirectory.get().asFile, "changelog_errors.txt")
+
+            errorFile.writeText("I have detected some issues with your pull request:\n\n")
+
             if (bodyErrors.isNotEmpty()) {
-                errorFile.writeText("Body issues:\n${bodyErrors.joinToString("\n") { it.message }}\n")
+                errorFile.writeText("Body issues:\n${bodyErrors.joinToString("\n") { it.message }}\n\n")
             }
             if (titleErrors.isNotEmpty()) {
-                errorFile.appendText("Title issues:\n${titleErrors.joinToString("\n") { it.message }}")
+                errorFile.appendText("Title issues:\n${titleErrors.joinToString("\n") { it.message }}\n\n")
             }
+
+            errorFile.writeText("Please fix these issues.")
 
             throw GradleException("Changelog verification failed")
         }

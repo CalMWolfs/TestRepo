@@ -57,13 +57,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const errors = fs.readFileSync('build/changelog_errors.txt', 'utf8');
-            const commentBody = `
-            I have detected some problems with your pull request changelog/title:
-            
-            ${errors}
-            
-            Please fix the errors and update your pull request.`
+            const test = fs.readFileSync('build/changelog_errors.txt', 'utf8');
+            const commentBody = `${test}`
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
