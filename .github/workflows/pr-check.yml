@@ -49,3 +49,25 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: 'Wrong Title/Changelog'
+
+      - name: Add comment to PR if changelog verification fails
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const errors = fs.readFileSync('build/changelog_errors.txt', 'utf8');
+            const commentBody = `
+            I have detected some problems with your pull request changelog/title:
+            
+            ${errors}
+            
+            Please fix the errors and update your pull request.`
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            })

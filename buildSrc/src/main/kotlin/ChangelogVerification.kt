@@ -1,11 +1,17 @@
 import at.hannibal2.changelog.SkyHanniChangelogBuilder
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
+import java.io.File
 
 abstract class ChangelogVerification : DefaultTask() {
+
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
 
     @Input
     var prTitle: String = ""
@@ -26,10 +32,18 @@ abstract class ChangelogVerification : DefaultTask() {
         if (bodyErrors.isEmpty() && titleErrors.isEmpty()) {
             println("Changelog and title verification successful")
         } else {
-            // todo do something with the errors
-            println("Changelog and/or title verification failed")
             bodyErrors.forEach { println(it.message) }
             titleErrors.forEach { println(it.message) }
+
+            // Export errors so that they can be listed in the PR comment
+            val errorFile = File(outputDirectory.get().asFile, "changelog_errors.txt")
+            if (bodyErrors.isNotEmpty()) {
+                errorFile.writeText("Body issues:\n${bodyErrors.joinToString("\n") { it.message }}\n")
+            }
+            if (titleErrors.isNotEmpty()) {
+                errorFile.appendText("Title issues:\n${titleErrors.joinToString("\n") { it.message }}")
+            }
+
             throw GradleException("Changelog verification failed")
         }
     }
