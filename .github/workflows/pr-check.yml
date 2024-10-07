@@ -35,3 +35,17 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           ./gradlew checkPrDescription -PprTitle="${PR_TITLE}" -PprBody="${PR_BODY}"
+
+      - name: Add label if changelog verification fails
+        if: failure()
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: 'Wrong Title/Changelog'
+
+      - name: Remove label if changelog verification passes
+        if: success()
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: 'Wrong Title/Changelog'
