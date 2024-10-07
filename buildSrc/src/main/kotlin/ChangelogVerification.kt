@@ -16,23 +16,21 @@ abstract class ChangelogVerification : DefaultTask() {
     @get:Internal
     val prBodyLines get() = prBody.lines()
 
-    private val prLink = "https://example.com/pr/1"
+    private val prLink = "ignored"
 
     @TaskAction
     fun scanChangelog() {
         val (changes, bodyErrors) = SkyHanniChangelogBuilder.findChanges(prBodyLines, prLink)
         val titleErrors = SkyHanniChangelogBuilder.findPullRequestNameErrors(prTitle, changes)
 
-        // todo do something with the errors
         if (bodyErrors.isEmpty() && titleErrors.isEmpty()) {
-            println("Changelog verification successful")
+            println("Changelog and title verification successful")
         } else {
-            println("Changelog verification failed")
+            // todo do something with the errors
+            println("Changelog and/or title verification failed")
             bodyErrors.forEach { println(it.message) }
             titleErrors.forEach { println(it.message) }
             throw GradleException("Changelog verification failed")
         }
-        println("prTitle: $prTitle")
-        println("prBody: $prBody")
     }
 }
