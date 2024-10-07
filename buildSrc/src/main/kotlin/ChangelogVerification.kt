@@ -26,6 +26,11 @@ abstract class ChangelogVerification : DefaultTask() {
 
     @TaskAction
     fun scanChangelog() {
+        if (prBodyLines.contains("exclude_from_changelog")) {
+            println("PR is excluded from changelog verification")
+            return
+        }
+
         val (changes, bodyErrors) = SkyHanniChangelogBuilder.findChanges(prBodyLines, prLink)
         val titleErrors = SkyHanniChangelogBuilder.findPullRequestNameErrors(prTitle, changes)
 
