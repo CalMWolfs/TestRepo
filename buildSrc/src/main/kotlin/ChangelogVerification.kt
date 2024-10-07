@@ -52,7 +52,7 @@ abstract class ChangelogVerification : DefaultTask() {
                 errorFile.appendText("Title issues:\n${titleErrors.joinToString("\n") { it.message }}\n\n")
             }
 
-            errorFile.appendText("Please fix these issues.")
+            errorFile.appendText("Please fix these issues. For the correct format, refer to the [pull request template](pull_request_template.md).")
 
             throw GradleException("Changelog verification failed")
         }
