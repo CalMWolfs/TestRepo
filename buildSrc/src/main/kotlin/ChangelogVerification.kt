@@ -15,7 +15,7 @@ abstract class ChangelogVerification : DefaultTask() {
     @get:Internal
     val prBodyLines get() = prBody.lines()
 
-    private val prLink = "https://example.com/pr/1"
+    private val prLink = "https://github.com/CalMWolfs/TestRepo/pull/1"
 
     @TaskAction
     fun scanChangelog() {
