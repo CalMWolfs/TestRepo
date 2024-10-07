@@ -40,6 +40,7 @@ publishing {
 }
 
 tasks.register("checkPrDescription", ChangelogVerification::class) {
+    this.outputDirectory.set(layout.buildDirectory)
     this.prTitle = project.findProperty("prTitle") as String
     this.prBody = project.findProperty("prBody") as String
 }
