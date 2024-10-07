@@ -23,6 +23,7 @@ abstract class ChangelogVerification : DefaultTask() {
     val prBodyLines get() = prBody.lines()
 
     private val prLink = "ignored"
+    private val templateLocation = "https://github.com/CalMWolfs/TestRepo/blob/master/pull_request_template.md"
 
     @TaskAction
     fun scanChangelog() {
@@ -52,7 +53,7 @@ abstract class ChangelogVerification : DefaultTask() {
                 errorFile.appendText("Title issues:\n${titleErrors.joinToString("\n") { it.message }}\n\n")
             }
 
-            errorFile.appendText("Please fix these issues. For the correct format, refer to the [pull request template](pull_request_template.md).")
+            errorFile.appendText("Please fix these issues. For the correct format, refer to the [pull request template]($templateLocation).")
 
             throw GradleException("Changelog verification failed")
         }
