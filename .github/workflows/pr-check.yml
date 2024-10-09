@@ -31,7 +31,7 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          ./gradlew checkPrDescription -PprTitle="${PR_TITLE}" -PprBody="${PR_BODY}" --refresh-dependencies
+          ./gradlew checkPrDescription -PprTitle="${PR_TITLE}" -PprBody="${PR_BODY}"
 
       - name: Add label if changelog verification fails
         if: failure()
