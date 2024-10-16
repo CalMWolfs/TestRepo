@@ -137,6 +137,6 @@ if __name__ == '__main__':
     with open("../../constants/museum.json", "w") as json_file:
         json.dump(outputJson, json_file, indent=2)
 
-    print(f"Data saved to ../../constants/museum.json")
+    print(f"Data saved to constants/museum.json")
 
 
