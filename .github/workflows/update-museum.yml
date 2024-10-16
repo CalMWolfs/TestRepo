@@ -7,7 +7,6 @@ on:
 
 jobs:
   update-data:
-
     if: "!contains(github.event.head_commit.message, 'Update museum data')"
     runs-on: ubuntu-latest
 
@@ -28,23 +27,20 @@ jobs:
       - name: Run Python script
         run: python .github/scripts/updateMuseum.py
 
-      - name: Check the current state of the repo
-        run: git status
-
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add constants/museum.json
-          git commit -m "Update museum data from Hypixel API"
+          git commit -m "Update museum data from Hypixel API" || echo "No changes to commit"
           git push origin bot/museum
 
-#      - name: Create Pull Request
-#        uses: peter-evans/create-pull-request@v7
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          branch: bot/museum
-#          base: master
-#          title: "Automated Update of Museum Data"
-#          body: "This pull request contains the latest museum data from the Hypixel API."
-#          labels: "automated update"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bot/museum
+          base: master
+          title: "Automated Update of Museum Data"
+          body: "This pull request contains the latest museum data from the Hypixel API."
+          labels: "automated update"
