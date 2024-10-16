@@ -39,12 +39,12 @@ jobs:
           git commit -m "Update museum data from Hypixel API"
           git push origin bot/museum
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: bot/museum
-          base: master
-          title: "Automated Update of Museum Data"
-          body: "This pull request contains the latest museum data from the Hypixel API."
-          labels: "automated update"
+#      - name: Create Pull Request
+#        uses: peter-evans/create-pull-request@v7
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          branch: bot/museum
+#          base: master
+#          title: "Automated Update of Museum Data"
+#          body: "This pull request contains the latest museum data from the Hypixel API."
+#          labels: "automated update"
