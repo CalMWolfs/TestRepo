@@ -12,9 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print last commit message
-        run: git log -1 --pretty=%B
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
