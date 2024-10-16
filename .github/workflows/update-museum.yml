@@ -41,6 +41,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: bot/museum
+          base: master
           title: "Automated Update of Museum Data"
           body: "This pull request contains the latest museum data from the Hypixel API."
           labels: "automated update"
