@@ -28,6 +28,9 @@ jobs:
       - name: Run Python script
         run: python .github/scripts/updateMuseum.py
 
+      - name: Check the current state of the repo
+        run: git status
+
       - name: Commit and push changes
         run: |
           git config --global user.name "github-actions"
