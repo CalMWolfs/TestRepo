@@ -122,9 +122,9 @@ if __name__ == '__main__':
     maxValues['total'] = maxValues['weapons'] + maxValues['armor'] + maxValues['rarities']
 
     outputJson = {
-        "weapons": sorted(list(weapons), key=lambda item: itemToXp.get(item, 0)),
-        "armor": sorted(list(armor), key=lambda item: itemToXp.get(item, 0)),
-        "rarities": sorted(list(rarities), key=lambda item: itemToXp.get(item, 0)),
+        "weapons": sorted(list(weapons), key=lambda item: (itemToXp.get(item, 0), item)),
+        "armor": sorted(list(armor), key=lambda item: (itemToXp.get(item, 0), item)),
+        "rarities": sorted(list(rarities), key=lambda item: (itemToXp.get(item, 0), item)),
         "special": sorted(list(special)),
         "armor_to_id": dict(sorted(armorToID.items())),
         "children": dict(sorted(children.items())),
