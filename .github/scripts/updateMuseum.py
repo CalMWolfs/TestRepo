@@ -16,18 +16,21 @@ mappedIds = {}
 
 
 def fetchJson(apiUrl):
-    response = requests.get(apiUrl)
-    return response.json()
+    try:
+        response = requests.get(apiUrl)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching data from {apiUrl}: {e}")
+        return {}
 
 
 def processMuseumData(internalName, data):
-    itemType = data['type']
+    itemType = data.get('type')
 
     if 'parent' in data:
         parentData = data['parent']
-        if parentData is None:
-            pass
-        else:
+        if parentData:
             for parent in parentData:
                 children[parentData[parent]] = parent
 
@@ -36,15 +39,13 @@ def processMuseumData(internalName, data):
             mappedIds[mappedId] = internalName
 
     if itemType == 'ARMOR_SETS':
-        donationXpInfo = data['armor_set_donation_xp']
+        donationXpInfo = data.get('armor_set_donation_xp', {})
         for armorSet in donationXpInfo:
             itemToXp[armorSet] = donationXpInfo[armorSet]
             armor.add(armorSet)
             addPieceToSet(internalName, armorSet)
-        return
-
     else:
-        donationXp = data['donation_xp']
+        donationXp = data.get('donation_xp', 0)
         itemToXp[internalName] = donationXp
 
     if itemType == 'WEAPONS':
