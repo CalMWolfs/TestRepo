@@ -7,7 +7,6 @@ on:
 
 jobs:
   update-data:
-    if: "!contains(github.event.head_commit.message, 'Update museum data')"
     runs-on: ubuntu-latest
 
     steps:
@@ -30,6 +29,10 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
           git add constants/museum.json
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "Update museum data from Hypixel API"
           git push --force origin HEAD:bot/museum
 
