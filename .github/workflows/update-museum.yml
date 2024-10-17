@@ -40,4 +40,14 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add constants/museum.json
           git commit -m "Update museum data from Hypixel API"
-          git push origin bot/museum
+#          git push origin bot/museum
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: bot/museum
+          base: master
+          title: "Automated Update of Museum Data"
+          body: "This pull request contains the latest museum data from the Hypixel API."
+          labels: "automated update"
