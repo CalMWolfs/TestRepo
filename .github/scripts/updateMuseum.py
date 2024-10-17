@@ -29,7 +29,7 @@ def processMuseumData(internalName, data):
             pass
         else:
             for parent in parentData:
-                children[parentData[parent]] = internalName
+                children[parentData[parent]] = parent
 
     if 'mapped_item_ids' in data:
         for mappedId in data['mapped_item_ids']:
