@@ -31,6 +31,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add constants/museum.json
           git commit -m "Update museum data from Hypixel API"
+          git pull --rebase origin bot/museum
           git push origin HEAD:bot/museum
 
       - name: Create Pull Request
