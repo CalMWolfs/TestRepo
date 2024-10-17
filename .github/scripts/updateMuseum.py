@@ -136,6 +136,3 @@ if __name__ == '__main__':
     os.makedirs(os.path.dirname("constants/museum.json"), exist_ok=True)
     with open("constants/museum.json", "w") as json_file:
         json.dump(outputJson, json_file, indent=2)
-
-    print(f"constants/museum.json")
-

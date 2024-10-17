@@ -22,15 +22,6 @@ jobs:
       - name: Install requests library
         run: python -m pip install requests
 
-      - name: Check and create bot/museum branch
-        run: |
-          if git show-ref --verify --quiet refs/heads/bot/museum; then
-            echo "Branch bot/museum exists."
-          else
-            echo "Branch bot/museum does not exist. Creating it from master."
-            git checkout -b bot/museum
-          fi
-
       - name: Run Python script
         run: python .github/scripts/updateMuseum.py
 
@@ -40,14 +31,13 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add constants/museum.json
           git commit -m "Update museum data from Hypixel API"
-#          git push origin bot/museum
+          git push origin bot/museum
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: bot/museum
-          base: master
           title: "Automated Update of Museum Data"
           body: "This pull request contains the latest museum data from the Hypixel API."
           labels: "automated update"
