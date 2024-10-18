@@ -22,7 +22,7 @@ def fetchJson(apiUrl):
         return response.json()
     except requests.RequestException as e:
         print(f"Error fetching data from {apiUrl}: {e}")
-        return {}
+        throw(e)
 
 
 def processMuseumData(internalName, data):
@@ -100,7 +100,7 @@ def findAppropriateId(setName):
 
 if __name__ == '__main__':
 
-    url = "https://api.hypixel.net/v2/resources/skyblock/items"
+    url = "https://api.hypixel.net/v2/resources/skyblock/iteams"
     fetchedJson = fetchJson(url)
     items = fetchedJson['items']
 
