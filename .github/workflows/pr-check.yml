@@ -61,5 +61,6 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: commentBody
+              body: commentBody,
+              name: "PR Changelog Verification"
             })
