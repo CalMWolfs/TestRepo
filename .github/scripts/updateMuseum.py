@@ -99,7 +99,7 @@ def findAppropriateId(setName):
 
 if __name__ == '__main__':
 
-    url = "https://api.hypixel.net/v2/resources/skyblock/iteams"
+    url = "https://api.hypixel.net/v2/resources/skyblock/items"
     fetchedJson = fetchJson(url)
     items = fetchedJson['items']
 
