@@ -9,8 +9,6 @@ jobs:
   update-data:
     runs-on: ubuntu-latest
 
-    if: ${{ github.repository_id == '247692460' }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
