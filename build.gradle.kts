@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.SkyHanniStudios:SkyHanniChangelogBuilder:1.0.1")
+    implementation("com.github.SkyHanniStudios:SkyHanniChangelogBuilder:1.0.2")
 }
 
 kotlin {
