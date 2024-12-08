@@ -17,10 +17,6 @@ repositories {
     }
 }
 
-dependencies {
-    implementation("com.github.SkyHanniStudios:SkyHanniChangelogBuilder:1.0.2")
-}
-
 kotlin {
     jvmToolchain(8)
     sourceSets.all {
