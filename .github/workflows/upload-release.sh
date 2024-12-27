@@ -2,7 +2,7 @@
 
 preReleaseParam=""
 echo "Checking if this is a pre-release for ${UPDATE_VERSION}."
-if ! echo "${UPDATE_VERSION}" | grep -E '.*\.0'>/dev/null; then
+if ! echo "${UPDATE_VERSION}" | grep -E '.*\.0$'>/dev/null; then
   preReleaseParam="--prerelease"
   echo "This is a pre-release. ${UPDATE_VERSION}"
 else
