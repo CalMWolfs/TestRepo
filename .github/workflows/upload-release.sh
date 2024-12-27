@@ -1,11 +1,12 @@
 #!/bin/bash
 
 preReleaseParam=""
+echo "Checking if this is a pre-release for ${UPDATE_VERSION}."
 if ! echo "${UPDATE_VERSION}" | grep -E '.*\.0'>/dev/null; then
   preReleaseParam="--prerelease"
-  echo "This is a pre-release."
+  echo "This is a pre-release. ${UPDATE_VERSION}"
 else
-  echo "This is a release."
+  echo "This is a release. ${UPDATE_VERSION}"
 fi
 
 # todo MULTI-VERSION
