@@ -1,0 +1,61 @@
+name: Pre-Publish
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    env:
+      UPDATE_VERSION: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify tag format
+        run: |
+          if [[ ! "${UPDATE_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid tag format. Expected tag format: major.minor.patch"
+            exit 1
+          fi
+
+      # todo change the version with an env variable like neu does
+      - name: Update version in root.gradle.kts
+        run: |
+          sed -i 's/version = ".*"/version = "${UPDATE_VERSION}"/' root.gradle.kts
+
+      - uses: ./.github/actions/setup-normal-workspace
+
+      - name: Build with Gradle
+        run: ./gradlew assemble -x test --stacktrace -PskipDetekt=true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: build/libs/*.jar
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Generate Github Changelog
+        env:
+          OUTPUT_TYPE: "GITHUB"
+          #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="GITHUB" -Preleased=False
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=false
+
+      - run: ./.github/workflows/upload-release.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # send to hannibal discord webhook
+
+      - name: Generate Discord Internal Changelog
+        env:
+          OUTPUT_TYPE: "DISCORD_INTERNAL"
+          #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="DISCORD_INTERNAL" -Preleased=False
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=false
+
+# todo
+#      - name: Upload Proposed Changelog to Discord

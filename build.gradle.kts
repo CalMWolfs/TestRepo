@@ -40,3 +40,10 @@ tasks.register("checkPrDescription", ChangelogVerification::class) {
     this.prTitle = project.findProperty("prTitle") as String
     this.prBody = project.findProperty("prBody") as String
 }
+
+tasks.register("generateChangelog", ChangelogGeneration::class) {
+    this.outputDirectory.set(layout.buildDirectory)
+    project.findProperty("modVersion")?.let { this.modVersion = it as String }
+    project.findProperty("outputType")?.let { this.outputType = it as String }
+    project.findProperty("released")?.let { this.released = (it as String).toBoolean() }
+}
