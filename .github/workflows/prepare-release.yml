@@ -25,8 +25,8 @@ jobs:
       # todo change the version with an env variable like neu does, once sh already used new versioning for a bit
       - name: Update version in root.gradle.kts
         run: |
-          sed -i 's/version = ".*"/version = "${UPDATE_VERSION}"/' build.gradle.kts
-#          sed -i 's/version = ".*"/version = "${UPDATE_VERSION}"/' root.gradle.kts
+          sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" build.gradle.kts
+#          sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" roots.gradle.kts
 
       - uses: ./.github/actions/setup-normal-workspace
 
