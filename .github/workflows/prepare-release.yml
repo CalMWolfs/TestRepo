@@ -45,6 +45,9 @@ jobs:
           #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="GITHUB" -Preleased=False
         run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=false
 
+      - name: Format Changelogs
+        run: ./.github/workflows/format-update-notes.sh
+
       - run: ./.github/workflows/upload-release.sh
         env:
           GH_TOKEN: ${{ github.token }}
