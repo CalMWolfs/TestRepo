@@ -28,12 +28,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          mkdir -p build
+          mkdir -p build/libs
           gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
-          mv *.jar build/
-
-      - name: List jar files
-        run: ls -Rla build/
+          mv *.jar build/libs/
 
       - name: Generate Github Changelog
         env:
@@ -54,7 +51,6 @@ jobs:
           name: build-artifacts
           path: |
             build/**/*.txt
-            build/**/*.jar
 
   upload-to-modrinth:
     needs: post-publish
@@ -68,8 +64,11 @@ jobs:
           name: build-artifacts
           path: build
 
-      - name: List artifacts
-        run: ls -Rla build/
+      - name: Download release file
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
 
       - name: Remove Modrinth Link
         run: |
