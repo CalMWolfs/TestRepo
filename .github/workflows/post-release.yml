@@ -105,7 +105,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          changelog=$(cat build/github-changelog.txt)
+          changelog=$(cat build/changelog-GITHUB.txt)
           gh release edit "${UPDATE_VERSION}" --notes "${changelog}" --repo "${REPO}"
 
   #  # todo decide later if this is wanted
