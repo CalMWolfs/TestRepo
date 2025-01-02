@@ -19,9 +19,6 @@ abstract class ChangelogGeneration : DefaultTask() {
     @Input
     var outputType: String = ""
 
-    @Input
-    var released: Boolean = false
-
     @TaskAction
     fun generateChangelog() {
 
@@ -35,12 +32,11 @@ abstract class ChangelogGeneration : DefaultTask() {
         println()
         println("Generating changelog for version $modVersion")
         println("Output type: $outputType")
-        println("Released: $released")
         println()
 
-        val changelog = SkyHanniChangelogBuilder.generateSpecificOutputType(modVersion, outputType, released)
+        val changelog = SkyHanniChangelogBuilder.generateSpecificOutputType(modVersion, outputType)
         val file = File(outputDirectory.get().asFile, "changelog-$outputType.txt")
-        file.appendText(changelog)
+        file.writeText(changelog)
 
         println("Changelog saved to ${file.path}")
     }

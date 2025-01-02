@@ -14,5 +14,5 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
-    implementation("com.github.CalMWolfs:SkyHanniChangelogBuilder:1.1.0-test2")
+    implementation("com.github.CalMWolfs:SkyHanniChangelogBuilder:1.1.0-test4")
 }

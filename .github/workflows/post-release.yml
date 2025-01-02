@@ -5,11 +5,15 @@ on:
     types:
       - published
 
+# todo only run on sh repo id
+
+env:
+  UPDATE_VERSION: ${{ github.event.release.tag_name }}
+  REPO: ${{ github.repository }}
+
 jobs:
   post-publish:
     runs-on: ubuntu-latest
-    env:
-      UPDATE_VERSION: ${{ github.event.release.tag_name }}
 
     steps:
       - name: Checkout code
@@ -23,12 +27,12 @@ jobs:
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
-        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=true
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
       - name: Generate Discord Changelog
         env:
           OUTPUT_TYPE: "DISCORD_PUBLIC"
-        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=true
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
       - name: Format Changelogs
         run: ./.github/workflows/format-update-notes.sh
@@ -42,9 +46,6 @@ jobs:
   upload-to-modrinth:
     needs: post-publish
     runs-on: ubuntu-latest
-    env:
-      UPDATE_VERSION: ${{ github.event.release.tag_name }}
-      REPO: ${{ github.repository }}
 
     #      todo multi version support
     steps:
@@ -56,7 +57,7 @@ jobs:
 
       - name: Download release file
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           gh release download "{UPDATE_VERSION}" -p '*.jar' --repo "{REPO}"
 
@@ -67,7 +68,7 @@ jobs:
       - name: Set Release Type
         run: |
           releaseType="release"
-          if ! echo "${UPDATE_VERSION}" | grep -E '.*\.0'>/dev/null; then
+          if ! echo "${UPDATE_VERSION}" | grep -E '.*\.0$'>/dev/null; then
             releaseType="beta"
           fi
           echo "preReleaseParam=${preReleaseParam}" >> $GITHUB_ENV
@@ -77,25 +78,22 @@ jobs:
         run: |
           echo "The release type is ${releaseType}"
 
-#      - name: Publish to Modrinth
-#        uses: Kir-Antipov/mc-publish@v3.3
-#        with:
-#          modrinth-id: byNkmv5G
-#          # todo make sure this is setup
-#          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-#          # todo multi version
-#          files: "*.jar"
-#          loaders: forge
-#          game-versions: 1.8.9
-#          version: ${{ github.event.release.tag_name }}
-#          version-type: ${{ releaseType }}
+  #      - name: Publish to Modrinth
+  #        uses: Kir-Antipov/mc-publish@v3.3
+  #        with:
+  #          modrinth-id: byNkmv5G
+  #          # todo make sure this is setup
+  #          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+  #          # todo multi version at a later point
+  #          files: "*.jar"
+  #          loaders: forge
+  #          game-versions: 1.8.9
+  #          version: ${{ github.event.release.tag_name }}
+  #          version-type: ${{ releaseType }}
 
   finalise-github-changelog:
     needs: post-publish
     runs-on: ubuntu-latest
-    env:
-      UPDATE_VERSION: ${{ github.event.release.tag_name }}
-      REPO: ${{ github.repository }}
 
     steps:
       - name: Download Changelogs
@@ -110,5 +108,54 @@ jobs:
           changelog=$(cat build/github-changelog.txt)
           gh release edit "${UPDATE_VERSION}" --notes "${changelog}" --repo "${REPO}"
 
-# todo commit the version bump
-# todo possibly add webhook for sending release to discord
+  #  # todo decide later if this is wanted
+  #  send-discord-webhook:
+  #    needs: post-publish
+  #    runs-on: ubuntu-latest
+  #
+  #    steps:
+  #      - name: Download Changelogs
+  #        uses: actions/download-artifact@v4
+  #        with:
+  #          name: build-artifacts
+  #
+  #      # todo make sure this webhook is made and points to correct channel
+  #      - name: Upload Release Changelog to Discord Webhook
+  #        env:
+  ##          todo depending on if this is a beta or full release change the webhook
+  #          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_POST_UPDATE }}
+  #          CHANGELOG_FILE: build/changelog-DISCORD_PUBLIC.txt
+  #        run: ./.github/workflows/send-discord-webhook.sh
+
+  bump-mod-version:
+    needs: post-publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update mod version in root.gradle.kts
+        run: |
+          original_content=$(cat root.gradle.kts)
+          sed -i '' "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" root.gradle.kts
+          updated_content=$(cat root.gradle.kts)
+          
+          if [ "$original_content" = "$updated_content" ]; then
+            echo "Version is already up-to-date, exiting."
+            exit 0
+          else
+            echo "Version in root.gradle.kts updated to ${UPDATE_VERSION}."
+          fi
+
+      # todo in future change the changelog.md file to have new changes
+
+      - name: Commit version bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-action@users.noreply.github.com'
+          git add root.gradle.kts
+          git commit -m "Bump version to ${UPDATE_VERSION}"
+          git push

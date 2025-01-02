@@ -5,6 +5,8 @@ on:
     tags:
       - "*"
 
+# todo only run on sh repo id
+
 jobs:
   prepare-release:
     runs-on: ubuntu-latest
@@ -25,8 +27,9 @@ jobs:
       # todo change the version with an env variable like neu does, once sh already used new versioning for a bit
       - name: Update version in root.gradle.kts
         run: |
+#           todo remove the build gradle one
           sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" build.gradle.kts
-#          sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" roots.gradle.kts
+          sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" root.gradle.kts
 
       - uses: ./.github/actions/setup-normal-workspace
 
@@ -43,8 +46,8 @@ jobs:
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
-          #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="GITHUB" -Preleased=False
-        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=false
+          #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="GITHUB"
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
       - name: Format Changelogs
         run: ./.github/workflows/format-update-notes.sh
@@ -58,8 +61,12 @@ jobs:
       - name: Generate Discord Internal Changelog
         env:
           OUTPUT_TYPE: "DISCORD_INTERNAL"
-          #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="DISCORD_INTERNAL" -Preleased=False
-        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE} -Preleased=false
+          #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="DISCORD_INTERNAL"
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
-# todo
-#      - name: Upload Proposed Changelog to Discord
+# todo make sure this webhook is made and points to correct channel
+      - name: Upload Proposed Changelog to Discord Webhook
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PRE_UPDATE }}
+          CHANGELOG_FILE: build/changelog-DISCORD_INTERNAL.txt
+        run: ./.github/workflows/send-discord-webhook.sh
