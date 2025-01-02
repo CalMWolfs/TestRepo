@@ -24,6 +24,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Download release file
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
+          mv *.jar build/
+
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
@@ -41,7 +48,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: build/**/*.txt
+          path: |
+            build/**/*.txt
+            build/**/*.jar
 
   upload-to-modrinth:
     needs: post-publish
@@ -55,12 +64,6 @@ jobs:
           name: build-artifacts
           path: build
 
-      - name: Download release file
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
-
       - name: Remove Modrinth Link
         run: |
           grep -v "Modrinth download" build/update-notes.txt | sed '1{/^$/d;}' > Changelog.md
@@ -73,11 +76,6 @@ jobs:
           fi
           echo "RELEASE_TYPE=${releaseType}" >> $GITHUB_ENV
 
-      # todo remove test
-      - name: Use Release Type
-        run: |
-          echo "The release type is ${RELEASE_TYPE}"
-
   #      - name: Publish to Modrinth
   #        uses: Kir-Antipov/mc-publish@v3.3
   #        with:
@@ -85,7 +83,7 @@ jobs:
   #          # todo make sure this is setup
   #          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
   #          # todo multi version at a later point
-  #          files: "*.jar"
+  #          files: "build/*.jar"
   #          loaders: forge
   #          game-versions: 1.8.9
   #          version: ${{ github.event.release.tag_name }}
