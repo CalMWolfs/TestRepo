@@ -4,6 +4,10 @@
 #TARGET_NAME="build/libs/SkyHanni-mc1.8.9-${UPDATE_VERSION}.jar"
 TARGET_NAME="build/libs/TestRepo-${UPDATE_VERSION}.jar"
 
+# Debug: List files before checksum
+echo "Listing files before checksum:"
+ls -Rla build/libs
+
 read -r -d '' extra_notes <<EOF
 Modrinth download: https://modrinth.com/mod/skyhanni/version/${UPDATE_VERSION}
 
