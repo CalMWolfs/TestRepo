@@ -25,9 +25,9 @@ jobs:
           fi
 
       # todo change the version with an env variable like neu does, once sh already used new versioning for a bit
+      # todo remove the build gradle one
       - name: Update version in root.gradle.kts
         run: |
-#           todo remove the build gradle one
           sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" build.gradle.kts
           sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" root.gradle.kts
 
@@ -64,7 +64,7 @@ jobs:
           #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="DISCORD_INTERNAL"
         run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
-# todo make sure this webhook is made and points to correct channel
+      # todo make sure this webhook is made and points to correct channel
       - name: Upload Proposed Changelog to Discord Webhook
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_PRE_UPDATE }}
