@@ -32,6 +32,9 @@ jobs:
           gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
           mv *.jar build/libs/
 
+      - name: List files in build/libs
+        run: ls -Rla build/libs
+
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
