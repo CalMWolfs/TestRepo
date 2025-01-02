@@ -71,12 +71,12 @@ jobs:
           if ! echo "${UPDATE_VERSION}" | grep -E '.*\.0$'>/dev/null; then
             releaseType="beta"
           fi
-          echo "preReleaseParam=${preReleaseParam}" >> $GITHUB_ENV
+          echo "RELEASE_TYPE=${releaseType}" >> $GITHUB_ENV
 
       # todo remove test
       - name: Use Release Type
         run: |
-          echo "The release type is ${releaseType}"
+          echo "The release type is ${RELEASE_TYPE}"
 
   #      - name: Publish to Modrinth
   #        uses: Kir-Antipov/mc-publish@v3.3
@@ -100,6 +100,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
+          path: build
 
       - name: Update GitHub Release Body
         env:
