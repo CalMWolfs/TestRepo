@@ -133,8 +133,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout beta branch
         uses: actions/checkout@v4
+        with:
+          ref: master
+#          ref: beta
 
       - name: Update mod version in root.gradle.kts
         run: |
