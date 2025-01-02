@@ -64,6 +64,9 @@ jobs:
           #./gradlew generateChangelog -PmodVersion="1.0.0" -PoutputType="DISCORD_INTERNAL"
         run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
+      - name: Grant execute permission for discord webhook script
+        run: chmod +x ./.github/workflows/send-discord-webhook.sh
+
       # todo make sure this webhook is made and points to correct channel
       - name: Upload Proposed Changelog to Discord Webhook
         env:
