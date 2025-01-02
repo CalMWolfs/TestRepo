@@ -147,16 +147,16 @@ jobs:
           
           if [ "$original_content" = "$updated_content" ]; then
             echo "Version is already up-to-date, exiting."
-            echo "::set-output name=version_updated::false"
+            echo "VERSION_UPDATED=false" >> $GITHUB_ENV
           else
             echo "Version in root.gradle.kts updated to ${UPDATE_VERSION}."
-            echo "::set-output name=version_updated::true"
+            echo "VERSION_UPDATED=true" >> $GITHUB_ENV
           fi
 
       # todo in future change the changelog.md file to have new changes
 
       - name: Commit version bump
-        if: steps.update_version.outputs.version_updated == 'true'
+        if: env.VERSION_UPDATED == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
