@@ -59,7 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          gh release download "{UPDATE_VERSION}" -p '*.jar' --repo "{REPO}"
+          gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
 
       - name: Remove Modrinth Link
         run: |
@@ -138,7 +138,7 @@ jobs:
       - name: Update mod version in root.gradle.kts
         run: |
           original_content=$(cat root.gradle.kts)
-          sed -i '' "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" root.gradle.kts
+          sed -i "s/version = \".*\"/version = \"${UPDATE_VERSION}\"/" root.gradle.kts
           updated_content=$(cat root.gradle.kts)
           
           if [ "$original_content" = "$updated_content" ]; then
