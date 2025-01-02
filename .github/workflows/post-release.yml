@@ -28,6 +28,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          mkdir -p build
           gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
           mv *.jar build/
 
