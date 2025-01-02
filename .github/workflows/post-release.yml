@@ -32,6 +32,9 @@ jobs:
           gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
           mv *.jar build/
 
+      - name: List jar files
+        run: ls -Rla build/
+
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
@@ -64,6 +67,9 @@ jobs:
         with:
           name: build-artifacts
           path: build
+
+      - name: List artifacts
+        run: ls -Rla build/
 
       - name: Remove Modrinth Link
         run: |
