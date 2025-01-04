@@ -6,6 +6,10 @@ TARGET_NAME="build/libs/TestRepo-${UPDATE_VERSION}.jar"
 
 # Debug: List files before checksum
 echo "Listing files before checksum:"
+
+CURRENT_DIR=$(pwd)
+echo "Current working directory: ${CURRENT_DIR}"
+
 ls -Rla build/libs
 
 # Print the full path of the file
@@ -18,8 +22,6 @@ else
 fi
 
 # Print the current working directory
-CURRENT_DIR=$(pwd)
-echo "Current working directory: ${CURRENT_DIR}"
 
 read -r -d '' extra_notes <<EOF
 Modrinth download: https://modrinth.com/mod/skyhanni/version/${UPDATE_VERSION}
