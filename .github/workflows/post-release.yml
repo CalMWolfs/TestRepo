@@ -24,6 +24,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Generate Github Changelog
+        env:
+          OUTPUT_TYPE: "GITHUB"
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
+
+      - name: Generate Discord Changelog
+        env:
+          OUTPUT_TYPE: "DISCORD_PUBLIC"
+        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
+
       - name: Download release file
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -37,25 +47,6 @@ jobs:
 
       - name: Print full path of the downloaded file
         run: realpath build/libs/*.jar
-
-      - name: List all files
-        run: ls -la
-
-      - name: List all files in build
-        run: ls -la build
-
-      - name: List all files in build/libs
-        run: ls -la build/libs
-
-      - name: Generate Github Changelog
-        env:
-          OUTPUT_TYPE: "GITHUB"
-        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
-
-      - name: Generate Discord Changelog
-        env:
-          OUTPUT_TYPE: "DISCORD_PUBLIC"
-        run: ./gradlew generateChangelog -PmodVersion=${UPDATE_VERSION} -PoutputType=${OUTPUT_TYPE}
 
       - name: List all files
         run: ls -la
