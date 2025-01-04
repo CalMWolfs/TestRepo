@@ -32,6 +32,12 @@ jobs:
           gh release download "${UPDATE_VERSION}" -p '*.jar' --repo "${REPO}"
           mv *.jar build/libs/
 
+      - name: Print current working directory
+        run: pwd
+
+      - name: Print full path of the downloaded file
+        run: realpath build/libs/*.jar
+
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
