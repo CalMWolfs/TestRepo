@@ -38,6 +38,15 @@ jobs:
       - name: Print full path of the downloaded file
         run: realpath build/libs/*.jar
 
+      - name: List all files
+        run: ls -la
+
+      - name: List all files in build
+        run: ls -la build
+
+      - name: List all files in build/libs
+        run: ls -la build/libs
+
       - name: Generate Github Changelog
         env:
           OUTPUT_TYPE: "GITHUB"
