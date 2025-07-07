@@ -4,6 +4,17 @@ on:
   pull_request_target:
     types: [ opened, edited ]
 
+  workflow_dispatch:
+    inputs:
+      pr_title:
+        description: 'Title of the PR'
+        required: true
+        default: ''
+      pr_body:
+        description: 'Body of the PR'
+        required: true
+        default: ''
+
 jobs:
   verify-changelog:
     if: github.event.pull_request.state == 'open' && '868709727' == github.repository_id
