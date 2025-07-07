@@ -1,9 +1,9 @@
 name: Post-Release
 
 on:
-#  release:
-#    types:
-#      - published
+  release:
+    types:
+      - published
 
   workflow_dispatch:
     inputs:
@@ -18,7 +18,7 @@ env:
   UPDATE_VERSION: ${{ inputs.update_version || github.event.release.tag_name }}
   REPO: ${{ github.repository }}
   CHANGELOG: ${{ inputs.changelog || github.event.release.body }}
-  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  # MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
 jobs:
   post-publish:
@@ -45,8 +45,14 @@ jobs:
       -   name: List all files in build/downloadedJars
           run: ls -la build/downloadedJars
 
-      -   name: Build Shared Variables Submodule
-          run: ./gradlew :sharedVariables:build
+      - name: Print environment variables
+        run: |
+          echo "UPDATE_VERSION=${UPDATE_VERSION}"
+          echo "REPO=${REPO}"
+          echo "CHANGELOG=${CHANGELOG}"
 
-      -   name: Publish to Modrinth
-          run: ./gradlew publishModrinth -Pchangelog="${CHANGELOG}" -PmodVersion="${UPDATE_VERSION}" -PmodrinthToken="${MODRINTH_TOKEN}"
+#      -   name: Build Shared Variables Submodule
+#          run: ./gradlew :sharedVariables:build
+#
+#      -   name: Publish to Modrinth
+#          run: ./gradlew publishModrinth -Pchangelog="${CHANGELOG}" -PmodVersion="${UPDATE_VERSION}" -PmodrinthToken="${MODRINTH_TOKEN}"
